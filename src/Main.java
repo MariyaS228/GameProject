@@ -3,6 +3,7 @@ public class Main {
 
         System.out.println("БУДУЩАЯ ИГРА \n");
         Board board = new Board();
-        board.showBoard();
+//        board.showBoardNumbers();
+        board.showBoardStars();
     }
 }

@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Board {
 
     Point[][] board = new Point[7][7];
@@ -16,7 +14,7 @@ public class Board {
                     board[i][j] = new Point(i,j, Point.NULL());
                 }
 
-                if((i < 2 && j > 1 && j < 5) || ((i > 1 && i < 4) && (j > 0 && j < 6))){ //TODO: не забыть лису
+                if((i < 2 && j > 1 && j < 5) || ((i > 1 && i < 4) && (j > 0 && j < 6))){
                     board[i][j] = new Point(i,j,Point.EMPTY());
                 }
 
@@ -24,11 +22,11 @@ public class Board {
                     board[i][j] = new Point(i,j, Point.HAS_GOOSE());
                 }
 
-                if( (i > 3 && i < 5) && (j <= 6) || (i > 4 && j > 1 && j < 5) ){
+                if( (i == 4) && (j <= 6) || (i > 4 && j > 1 && j < 5) ){
                     board[i][j] = new Point(i,j,Point.HAS_GOOSE());
                 }
 
-                if((i > 1 && i < 3) && (j > 2 && j < 4)){
+                if((i == 2) && (j == 3)){
                    board[i][j] = new Point(i, j, Point.HAS_FOX()) ; //я сделала лису)
                 }
 
@@ -36,11 +34,26 @@ public class Board {
         }
     }
 
-    public void showBoard(){
+    public void showBoardNumbers(){
         for (int i = 0; i < board.length; i++) {
             System.out.println();
             for (int j = 0; j < board[0].length; j++) {
                 board[i][j].showCords();
+            }
+        }
+    }
+    public void showBoardStars(){
+        for (int i = 0; i < board.length; i++) {
+            System.out.println();
+            for (int j = 0; j < board[0].length; j++) {
+                int state = board[i][j].getState();
+                if(state == Point.NULL()){
+                    System.out.print("  ");
+                }
+                if(state == Point.EMPTY()){
+                    System.out.print("* ");
+                }
+
             }
         }
     }

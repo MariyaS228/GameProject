@@ -1,7 +1,7 @@
 public class Point {
     private static int HAS_FOX = 2;
-    private static int EMPTY = 1;
-    private static int HAS_GOOSE = 0;
+    private static int HAS_GOOSE = 1;
+    private static int EMPTY = 0;
     private static int NULL = -1;
 
     private int x;
@@ -16,6 +16,10 @@ public class Point {
 
     public void showCords(){
         System.out.print(state + " ");
+    }
+
+    public int getState(){
+        return state;
     }
 
     public static int NULL() {
