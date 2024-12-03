@@ -4,6 +4,7 @@ public class Point {
     private static int EMPTY = 0;
     private static int NULL = -1;
 
+
     private int x;
     private int y;
     private int state;
@@ -16,6 +17,19 @@ public class Point {
 
     public void showCords(){
         System.out.print(state + " ");
+    }
+
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int[] getCords(){
+        return new int[]{x,y};
     }
 
     public int getState(){
