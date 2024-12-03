@@ -20,8 +20,16 @@ public class Board {
                     board[i][j] = new Point(i,j,Point.EMPTY());
                 }
 
-                if((i > 1 && i < 4) && (j<1 || j > 5)){
+                if( (i > 1 && i < 4) && (j < 1 || j > 5) ){
                     board[i][j] = new Point(i,j, Point.HAS_GOOSE());
+                }
+
+                if( (i > 3 && i < 5) && (j <= 6) || (i > 4 && j > 1 && j < 5) ){
+                    board[i][j] = new Point(i,j,Point.HAS_GOOSE());
+                }
+
+                if((i > 1 && i < 3) && (j > 2 && j < 4)){
+                   board[i][j] = new Point(i, j, Point.HAS_FOX()) ; //я сделала лису)
                 }
 
             }
