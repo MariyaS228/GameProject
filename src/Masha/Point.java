@@ -1,3 +1,7 @@
+package Masha;
+
+import java.util.Arrays;
+
 public class Point {
     private static int HAS_FOX = 2;
     private static int HAS_GOOSE = 1;
@@ -35,6 +39,14 @@ public class Point {
     public int getState(){
         return state;
     }
+    public void setState(int state){
+        this.state = state;
+    }
+
+    public String toString(){
+        return Arrays.toString(getCords());
+    }
+
 
     public static int NULL() {
         return NULL;
