@@ -6,6 +6,8 @@ import Masha.Stones.Goose;
 import Masha.Stones.Stone;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameLoop {
@@ -14,27 +16,28 @@ public class GameLoop {
     private boolean isGameOn;
     private boolean foxTurn = true;
     private final Scanner scanner = new Scanner(System.in);
-    private final Fox fox = new Fox(2,3);
+    private final Stone fox = new Fox(2,3);
 
-    private final Goose goose1 = new Goose(2,0);
-    private final Goose goose2 = new Goose(2,6);
-    private final Goose goose3 = new Goose(3,0);
-    private final Goose goose4 = new Goose(3,6);
-    private final Goose goose5 = new Goose(4,0);
-    private final Goose goose6 = new Goose(4,1);
-    private final Goose goose7 = new Goose(4,2);
-    private final Goose goose8 = new Goose(4,3);
-    private final Goose goose9 = new Goose(4,4);
-    private final Goose goose10 = new Goose(4,5);
-    private final Goose goose11 = new Goose(4,6);
-    private final Goose goose12 = new Goose(5,2);
-    private final Goose goose13 = new Goose(5,3);
-    private final Goose goose14 = new Goose(5,4);
-    private final Goose goose15 = new Goose(6,2);
-    private final Goose goose16 = new Goose(6,3);
-    private final Goose goose17 = new Goose(6,4);
+    private final Stone goose1 = new Goose(2,0);
+    private final Stone goose2 = new Goose(2,6);
+    private final Stone goose3 = new Goose(3,0);
+    private final Stone goose4 = new Goose(3,6);
+    private final Stone goose5 = new Goose(4,0);
+    private final Stone goose6 = new Goose(4,1);
+    private final Stone goose7 = new Goose(4,2);
+    private final Stone goose8 = new Goose(4,3);
+    private final Stone goose9 = new Goose(4,4);
+    private final Stone goose10 = new Goose(4,5);
+    private final Stone goose11 = new Goose(4,6);
+    private final Stone goose12 = new Goose(5,2);
+    private final Stone goose13 = new Goose(5,3);
+    private final Stone goose14 = new Goose(5,4);
+    private final Stone goose15 = new Goose(6,2);
+    private final Stone goose16 = new Goose(6,3);
+    private final Stone goose17 = new Goose(6,4);
 
-    private final Goose[] geeseArray = new Goose[]{goose1,goose2,goose3,goose4,goose5,goose6,goose6,goose7,goose8,goose9,goose10,goose11,goose12,goose13,goose14,goose15,goose16,goose17};
+    private List<Stone> geeseArray = new ArrayList<>();
+
 
 
 
@@ -44,6 +47,23 @@ public class GameLoop {
     public GameLoop(Board board){
         this.board = board;
         isGameOn = true;
+        geeseArray.add(goose1);
+        geeseArray.add(goose2);
+        geeseArray.add(goose3);
+        geeseArray.add(goose4);
+        geeseArray.add(goose5);
+        geeseArray.add(goose6);
+        geeseArray.add(goose7);
+        geeseArray.add(goose8);
+        geeseArray.add(goose9);
+        geeseArray.add(goose10);
+        geeseArray.add(goose11);
+        geeseArray.add(goose12);
+        geeseArray.add(goose13);
+        geeseArray.add(goose14);
+        geeseArray.add(goose15);
+        geeseArray.add(goose16);
+        geeseArray.add(goose17);
     }
 
     //TODO maybe add some settings for the loop
@@ -80,7 +100,7 @@ public class GameLoop {
             }
             System.out.println();
         }
-        Goose currentGoose = getGooseById(scanner.nextInt());
+        Stone currentGoose = getGooseById(scanner.nextInt());
         scanner.nextLine();
 
         System.out.println("You can move: ");
@@ -152,15 +172,18 @@ public class GameLoop {
 
         assert direction != null;
         if(board.canMoveDirection(board.getBoard()[fox.getX()][fox.getY()], direction)) fox.move(direction, board);
-        else if(board.canEatDirection(board.getBoard()[fox.getX()][fox.getY()], direction)) fox.eat(direction, board);
-        if(geeseArray.length==0) gameOver();
+        else if(board.canEatDirection(board.getBoard()[fox.getX()][fox.getY()], direction)){
+            geeseArray = fox.eat(direction, board, geeseArray);
+
+        }
+        if(geeseArray.isEmpty()) gameOver();
     }
 
-    private Goose getGooseById(int id){
+    private Stone getGooseById(int id){
 
         int x = (id-id%10)/10;
         int y = id%10;
-        for (Goose goose : geeseArray){
+        for (Stone goose : geeseArray){
             if(goose.getX() == x && goose.getY() == y) {
                 return goose;
             }

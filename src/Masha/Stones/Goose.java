@@ -3,6 +3,9 @@ package Masha.Stones;
 import Masha.Board;
 import Masha.Point;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Goose implements Stone {
     private int x;
     private int y;
@@ -51,6 +54,13 @@ public class Goose implements Stone {
 
 
     }
+
+    @Override
+    public List<Stone> eat(Direction direction, Board board, List<Stone> geeseArray) {
+        return Collections.emptyList();
+    }
+
+
     private void moveUp(Board board) {
         if (!outOfBounds(x - 1, y, board) && board.canMoveTo(board.getBoard()[x][y], board.getBoard()[x - 1][y])) {
 
@@ -104,6 +114,8 @@ public class Goose implements Stone {
     private boolean outOfBounds(int x, int y, Board board){
         return x < 0 || y < 0 || x >= board.getBoard().length || y >= board.getBoard().length;
     }
+
+
 
 
 }

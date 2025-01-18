@@ -1,7 +1,10 @@
 package Masha.Stones;
 
 import Masha.Board;
+import Masha.GameLoop;
 import Masha.Point;
+
+import java.util.List;
 
 public class Fox implements Stone{
     private int x;
@@ -138,7 +141,7 @@ public class Fox implements Stone{
         }
     }
 
-    public void eat(Direction direction, Board board){
+    public List<Stone> eat(Direction direction, Board board, List<Stone> geese){
         int newX;
         int newY;
 
@@ -163,8 +166,10 @@ public class Fox implements Stone{
         }
         board.getBoard()[newX][newY].setState(Point.EMPTY());
         board.update(board);
+        geese.removeIf(goose -> goose.getX() == newX && goose.getY() == newY);
         move(direction,board);
         move(direction,board);
+        return geese;
     }
 
     private boolean outOfBounds(int x, int y, Board board){
