@@ -33,17 +33,6 @@ public class Fox implements Stone{
         this.y = y;
     }
 
-    //TODO implement this
-    public boolean canMoveTo(Point from, Point to){
-
-
-        return true;
-    }
-
-    //TODO implement this
-    //the idea is that after every move the app prints a set of available moves e.g
-    // [UP / DOWN / UP-RIGHT / LEFT] and depending on what the player types, the fox moves that way
-    //ALSO IMPLEMENT THAT WHEN THERES A GOOSE IN THE DIRECTION YOU WANT TO MOVE TO YOU AUTOMATICALLY EAT IT
     public void move(Direction direction, Board board){
 
         switch (direction){
@@ -56,13 +45,13 @@ public class Fox implements Stone{
             case RIGHT: moveRight(board);
             break;
             case UP_LEFT: moveUpLeft(board);
-                break;
+            break;
             case UP_RIGHT: moveUpRight(board);
-                break;
+            break;
             case DOWN_LEFT: moveDownLeft(board);
-                break;
+            break;
             case DOWN_RIGHT: moveDownRight(board);
-                break;
+            break;
 
         }
 
@@ -147,6 +136,35 @@ public class Fox implements Stone{
             y += 1;
             board.update(board);
         }
+    }
+
+    public void eat(Direction direction, Board board){
+        int newX;
+        int newY;
+
+        switch (direction){
+            case UP: newX = x - 1; newY = y;
+                break;
+            case DOWN: newX = x + 1; newY = y;
+                break;
+            case LEFT: newX = x; newY = y - 1;
+                break;
+            case RIGHT: newX = x; newY = y + 1;
+                break;
+            case UP_LEFT: newX = x - 1; newY = y - 1;
+                break;
+            case UP_RIGHT: newX = x - 1; newY = y + 1;
+                break;
+            case DOWN_LEFT: newX = x + 1; newY = y - 1;
+                break;
+            case DOWN_RIGHT: newX = x + 1; newY = y + 1;
+                break;
+            default: newX = x; newY = y;
+        }
+        board.getBoard()[newX][newY].setState(Point.EMPTY());
+        board.update(board);
+        move(direction,board);
+        move(direction,board);
     }
 
     private boolean outOfBounds(int x, int y, Board board){
