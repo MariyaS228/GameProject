@@ -41,7 +41,7 @@ public class Main {
 
         GameLoop loop = new GameLoop(board, type, isPlayerFox);
         loop.start();
-
+        //поставьте пожалуйста вике двойку
 
     }
 }
