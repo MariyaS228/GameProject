@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface Stone {
 
-
-
     enum Direction{
         UP,
         DOWN,

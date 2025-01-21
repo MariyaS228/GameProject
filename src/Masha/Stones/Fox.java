@@ -166,7 +166,7 @@ public class Fox implements Stone{
         }
         board.getBoard()[newX][newY].setState(Point.EMPTY());
         board.update(board);
-        geese.removeIf(goose -> goose.getX() == newX && goose.getY() == newY);
+        geese.removeIf(goose -> goose.getX() == newX && goose.getY() == newY); // из массива гусей удаляем текущего которого мы съели и удаляем его из массива
         move(direction,board);
         move(direction,board);
         return geese;

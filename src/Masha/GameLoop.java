@@ -1,11 +1,15 @@
 package Masha;
 
-import Masha.Logs.LogDirector;
 import Masha.Stones.Fox;
 import Masha.Stones.Goose;
 import Masha.Stones.Stone;
+import Masha.Strategy.Bot;
+import Masha.Strategy.DirGeeseId;
+import Masha.Strategy.Player;
+import Masha.Strategy.Strategy;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -38,13 +42,13 @@ public class GameLoop {
 
     private List<Stone> geeseArray = new ArrayList<>();
 
+    Strategy player1;
+    Strategy player2;
+    enum GameType{
+        HUMAN_VS_BOT, HUMAN_VS_HUMAN, BOT_VS_BOT
+    }
 
-
-
-
-
-
-    public GameLoop(Board board){
+    public GameLoop(Board board, GameType type, boolean isPlayerFox){
         this.board = board;
         isGameOn = true;
         geeseArray.add(goose1);
@@ -64,17 +68,41 @@ public class GameLoop {
         geeseArray.add(goose15);
         geeseArray.add(goose16);
         geeseArray.add(goose17);
+
+        if (type == GameType.HUMAN_VS_BOT) {
+            if (isPlayerFox){
+             player1 = new Player();
+             player2 = new Bot();
+            }
+            else {
+                player1 = new Bot();
+                player2 = new Player();
+            }
+        }
+        else if (type == GameType.HUMAN_VS_HUMAN) {
+            player1 = new Player();
+            player2 = new Player();
+        }
+        else {
+            player1 = new Bot();
+            player2 = new Bot();
+        }
     }
 
     //TODO maybe add some settings for the loop
     public void start(){
-
+//TODO ТУТ С ГЕМОВЕРОМ ГОВОРИЛИ ЧТОТО ВЫЗЫВАТЬ ЕЕ ТУТ
         while(isGameOn){
             board.showBoardStars();
             if(foxTurn) foxMove();
             else geeseMove();
             foxTurn = !foxTurn;
-
+            if (!canMoveSomeWhere()){ //тут чтобы корректно писалось кто победил гуси или лиса
+                gameOver();
+            }
+            if(geeseArray.isEmpty()){
+                gameOver();
+            }
 
             //clean the screen
             clearConsole();
@@ -82,104 +110,25 @@ public class GameLoop {
     }
 
     private void geeseMove() {
-        System.out.println();
-        System.out.println("Choose the goose by ID: ");
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                // Check if the state of the Point is 1
-                if (board.getBoard()[i][j].getState() == Point.HAS_GOOSE()) {
-                    System.out.print(board.getBoard()[i][j].getX() + "" + board.getBoard()[i][j].getY() + " "); // Print the Point
-                } else if (board.getBoard()[i][j].getState() == Point.EMPTY()) {
-                    System.out.print("+  ");
-                }else if(board.getBoard()[i][j].getState() == Point.HAS_FOX()){
-                    System.out.print("@  ");
-                }
-                else{
-                    System.out.print("   ");
-                }
-            }
-            System.out.println();
-        }
-        Stone currentGoose = getGooseById(scanner.nextInt());
-        scanner.nextLine();
-
-        System.out.println("You can move: ");
-        for (int i = 0; i < 8; i++) {
-            if(Stone.Direction.values()[i]!= Stone.Direction.DOWN &&
-                    Stone.Direction.values()[i]!= Stone.Direction.DOWN_LEFT &&
-                    Stone.Direction.values()[i]!= Stone.Direction.DOWN_RIGHT &&
-                    board.canMoveDirection(board.getBoard()[currentGoose.getX()][currentGoose.getY()], Stone.Direction.values()[i])){
-                System.out.print(Stone.Direction.values()[i] + " / ");
-            }
-        }
-        System.out.println();
-
-        Stone.Direction direction;
-        switch (scanner.nextLine().toLowerCase()){
-            case "up": direction = Stone.Direction.UP;
-                break;
-            case "left": direction = Stone.Direction.LEFT;
-                break;
-            case "right": direction = Stone.Direction.RIGHT;
-                break;
-            case "up_left": direction = Stone.Direction.UP_LEFT;
-                break;
-            case "up_right": direction = Stone.Direction.UP_RIGHT;
-                break;
-            default: direction = null;
-        }
-
-            currentGoose.move(direction, board);
+        RoBoard roBoard = new RoBoard(board);
+        DirGeeseId dirGeeseId = player2.geeseMove(roBoard,geeseArray);
+        Stone currentGoose = dirGeeseId.getGoose();
+        currentGoose.move(dirGeeseId.getDirection(),board);
     }
 
     private void foxMove(){
-        int availableMoves = 0;
-        System.out.println("You can move: ");
-        for (int i = 0; i < 8; i++) {
-            if(board.canMoveDirection( board.getBoard()[fox.getX()][fox.getY()], Stone.Direction.values()[i]) ||
-                    board.canEatDirection(board.getBoard()[fox.getX()][fox.getY()], Stone.Direction.values()[i])){
-                availableMoves++;
-                System.out.print(Stone.Direction.values()[i] + " / ");
-            }
-        }
-
-        if(availableMoves==0){
-            gameOver();
-        }
-        System.out.println();
-
-        Stone.Direction direction;
-        switch (scanner.nextLine().toLowerCase()){
-            case "up": direction = Stone.Direction.UP;
-                break;
-            case "down": direction = Stone.Direction.DOWN;
-                break;
-            case "left": direction = Stone.Direction.LEFT;
-                break;
-            case "right": direction = Stone.Direction.RIGHT;
-                break;
-            case "up_left": direction = Stone.Direction.UP_LEFT;
-                break;
-            case "up_right": direction = Stone.Direction.UP_RIGHT;
-                break;
-            case "down_left": direction = Stone.Direction.DOWN_LEFT;
-                break;
-            case "down_right": direction = Stone.Direction.DOWN_RIGHT;
-                break;
-            default: direction = null;
-        }
+        RoBoard roBoard = new RoBoard(board);
+        Stone.Direction direction = player1.foxMove(roBoard,fox,geeseArray);
 
 
-        assert direction != null;
-        if(board.canMoveDirection(board.getBoard()[fox.getX()][fox.getY()], direction)) fox.move(direction, board);
-        else if(board.canEatDirection(board.getBoard()[fox.getX()][fox.getY()], direction)){
+        if(roBoard.canMoveDirection(roBoard.getPoint(fox.getX(),fox.getY()), direction)) fox.move(direction, board);
+        else if(roBoard.canEatDirection(roBoard.getPoint(fox.getX(),fox.getY()), direction)){
             geeseArray = fox.eat(direction, board, geeseArray);
 
         }
-        if(geeseArray.isEmpty()) gameOver();
     }
 
-    private Stone getGooseById(int id){
+    private Stone getGooseById(int id,List<Stone> geeseArray){
 
         int x = (id-id%10)/10;
         int y = id%10;
@@ -199,7 +148,18 @@ public class GameLoop {
         }
     }
 
-    private void gameOver(){
+    public boolean canMoveSomeWhere() {
+        for (int i = 0; i < 8; i++) {
+            if (board.canMoveDirection(board.getBoard()[fox.getX()][fox.getY()], Stone.Direction.values()[i]) ||
+                    board.canEatDirection(board.getBoard()[fox.getX()][fox.getY()], Stone.Direction.values()[i])) { //если можем кушать либо двигаться то выводим в чат
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void gameOver(){
         isGameOn = false;
         clearConsole();
 //        scanner.close();

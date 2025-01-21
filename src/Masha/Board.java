@@ -31,7 +31,7 @@ public class Board {
                 }
 
                 if((i == 2) && (j == 3)){
-                   board[i][j] = new Point(i, j, Point.HAS_FOX()) ; //я сделала лису)
+                   board[i][j] = new Point(i, j, Point.HAS_FOX()) ; //лиса
                 }
 
 
